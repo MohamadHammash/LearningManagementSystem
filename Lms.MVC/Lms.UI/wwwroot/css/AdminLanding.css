@@ -1,0 +1,96 @@
+﻿h1 {
+    color: #fff;
+    margin: 40px 0 60px 0;
+    font-weight: 300;
+}
+
+.our-team-main {
+    width: 100%;
+    height: auto;
+    border-bottom: 15px #9c9cd1 solid;
+    background: #fff;
+    text-align: center;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    transition: 0.5s;
+    margin-bottom: 28px;
+}
+
+    .our-team-main img {
+        border-radius: 50%;
+        margin-bottom: 20px;
+        width: 90px;
+    }
+
+    .our-team-main h3 {
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .our-team-main p {
+        margin-bottom: 0;
+    }
+
+.team-back {
+    width: 100%;
+    height: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 5px 15px 0 15px;
+    text-align: center;
+    background: #fff;
+    align-self: auto;
+}
+
+.team-front {
+    width: 100%;
+    height: auto;
+    position: relative;
+    z-index: 10;
+    background: #fff;
+    padding: 15px;
+    bottom: 0px;
+    transition: all 0.5s ease;
+}
+
+.our-team-main:hover .team-front {
+    bottom: -200px;
+    transition: all 0.5s ease;
+}
+
+.our-team-main:hover {
+    border-color: #777;
+    transition: 0.5s;
+}
+
+a {
+    color: #0366d6;
+}
+
+.non-links {
+    color: black;
+}
+
+span {
+    color: coral;
+}
+
+.navbar-light {
+    background-color: transparent !important;
+    border-bottom: none !important;
+    box-shadow: rgba(0,0,0, 10) 0px 0px 10px 0px inset;
+}
+
+    .navbar-light a {
+        color: #9c9cd1 !important;
+    }
+
+    .navbar-light button {
+        color: #9c9cd1 !important;
+    }
+
+/*.col-lg-6 {
+    background-color: rgba(256, 256, 256, 0.5);
+}*/

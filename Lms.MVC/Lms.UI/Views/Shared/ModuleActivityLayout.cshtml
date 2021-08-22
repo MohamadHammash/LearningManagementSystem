@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    @*<title>@ViewData["Title"] Home</title>*@
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <script src="https://kit.fontawesome.com/7ab4d0c039.js" crossorigin="anonymous"></script>
+</head>
+<body>
+   
+    @Html.AntiForgeryToken()
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-dark bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+
+                <a class="navbar-brand align-content-start" asp-area="" asp-controller="Home" asp-action="Index"><img class=" logo img-fluid mr-5" src="~/Assets/Lms logo.png" /></a>
+
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+
+                        @if (User.IsInRole("Student"))
+                        {
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-action="ShowMyClassMates" asp-controller="Courses">Students</a>
+                            </li>
+
+                        }
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Authors" asp-action="Index">Authors</a>
+                        </li>
+
+                        @if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Courses" asp-action="Index">Courses</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="ApplicationUsers" asp-action="Index">Users</a>
+                            </li>
+
+                        }
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Publications" asp-action="Index">Literature</a>
+                        </li>
+                    </ul>
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    
+
+    <footer class="border-top footer course-module text-muted">
+        <div class="container">
+            &copy; 2021 - Lms.UI - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

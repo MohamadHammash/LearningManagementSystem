@@ -1,0 +1,65 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> userManager
+@model DetailActivityViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Untitled</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+    <div class="row">
+        <div class="col">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Modules" asp-route-Id="@Model.CourseId"><span>@Model.CourseTitle</span></a></li>
+                <li class="breadcrumb-item"><a asp-action="Index" asp-route-Id="@Model.ModuleId"><span>@Model.ModuleTitle</span></a></li>
+                <li class="breadcrumb-item active" aria-current="page"><span>@Model.Title</span></li>
+            </ol>
+        </div>
+    </div>
+    <div>
+        @if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+        {
+            <a class="btn btn-info" asp-action="Edit" asp-route-id="@Model.Id">Edit Activity&nbsp;&nbsp;</a>
+        }
+        <a class="btn btn-info" asp-action="Index" asp-route-Id="@Model.ModuleId">Back to the schedule</a>
+        <br />
+        <br />
+        <br />
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="row">
+                <div class="col"><h3>@Model.Title</h3></div>
+                <div class="col">End date: @Model.EndDate</div>
+            </div>
+            <div class="row">
+                <div class="col">@Model.Description</div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col">Files:<br />@await Component.InvokeAsync("ListFiles", new { CMAType = "activity", id = Model.Id.ToString(), userId = userManager.GetUserAsync(User).Result.Id })</div>
+            </div>            
+            @if (Model.ActivityType.Name == "Assignment" || User.IsInRole("Teacher"))
+            {   
+            @await Component.InvokeAsync("UploadFile", new { userId = userManager.GetUserAsync(User).Result.Id, Id = Model.Id, CMAType = "activity" })
+            }
+        </div>
+        <div class="col-xl-5">
+            @await Component.InvokeAsync("StudentStatisticsBar", new { CMAType = "course", courseId = (int)Model.CourseId, moduleId = (int)Model.Id, userId = userManager.GetUserId(User) })
+        </div>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>

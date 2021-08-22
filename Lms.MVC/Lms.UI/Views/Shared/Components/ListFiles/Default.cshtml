@@ -1,0 +1,39 @@
+﻿@using Lms.MVC.UI.Views.Shared.Components.ListFiles
+@using Lms.MVC.Core.Repositories
+@using System.Net 
+@inject IUoW uow
+@model ListFiles
+
+@if (Model.FileList.Count != 0)
+{
+    foreach (var file in Model.FileList)
+    {
+
+<b>@WebUtility.HtmlDecode(file.UntrustedName)</b><br/>
+
+        <span><b>Upload date:</b> @file.UploadDT -</span>
+
+        <span><b> File size: </b>@(file.Size/1000) Kb</span>
+
+        <a class="btn btn-info" asp-action="DownloadFile" asp-controller="Files" asp-route-id="@file.Id"> Download</a>
+        
+        @if (uow.UserRepository.GetAllFilesByUserId(Model.userId).Result.Contains(file))
+        {
+            <a class="btn btn-warning" asp-action="DeleteFile" asp-controller="Files"
+               asp-route-id="@file.Id"
+               asp-route-CMAType="@Model.CMAType"
+               asp-route-userId="@Model.userId"
+               asp-route-originUrl=@Context.Request.Path> Delete</a>
+        }
+        <br />
+        <span><b>Description</b></span>
+        <br />
+        <span>@file.Description</span>
+        <br />
+
+    }
+}
+else
+{
+    <p>No files found.</p>
+}

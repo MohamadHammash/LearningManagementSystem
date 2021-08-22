@@ -1,0 +1,39 @@
+﻿@model DetailModuleViewModel
+
+@if (Model.Activities.Count() != 0)
+{<h4>@Model.Title</h4>
+<hr />
+
+<h1>@Model.Title</h1>
+@if (User.IsInRole("Admin") || User.IsInRole("Teacher"))
+{
+    <p>
+        <a asp-controller="Activities" asp-action="Create" asp-route-id="@Model.Id">Create New Activity</a><br />
+        <a asp-controller="Modules" asp-action="Edit" asp-route-id="@Model.Id">Edit Module</a>
+    </p>
+}
+
+<div class="card-deck">
+    @foreach (var activity in Model.Activities)
+    {
+        <div class="card text-white bg-primary mb-3">
+            <a asp-controller="activities" asp-action="details" asp-route-id="@activity.Id">
+                <h5 class="card-title">@activity.Title</h5>
+                <p class="card-body">@activity.Description</p>
+                <div class="card-footer text-muted">End Date: @activity.EndDate</div>
+            </a>
+        </div>
+    }
+</div>
+}
+else
+{
+@if (User.IsInRole("Admin") || User.IsInRole("Teacher"))
+{
+    <p>
+        <a asp-action="Create" asp-route-id="@Model.Id">Create New Activity</a> |
+        <a asp-action="Index">Back to Module</a>
+    </p>
+    <p>No activities in this module</p>
+}
+}

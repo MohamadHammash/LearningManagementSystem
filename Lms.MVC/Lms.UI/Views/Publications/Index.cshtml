@@ -1,0 +1,77 @@
+﻿@model PaginationResult<Publication>
+@using Lms.API.Core.Entities
+@using Microsoft.AspNetCore.Identity
+@using Lms.MVC.UI.Utilities.Pagination
+@using Lms.MVC.UI.Views.Shared.Components.Pagination
+@inject UserManager<ApplicationUser> userManager
+
+@{
+    ViewData["Title"] = "Literature";
+}
+
+<form class="search-form">
+    <div class="input-group">
+        <input type="submit" value="search" />
+        <input type="text" name="search" class="form-control" placeholder="Search..." autofocus>
+        <button type="reset" class="btn bg-transparent" tabindex="-1" style="margin-left: -40px; z-index: 100;">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
+</form>
+
+<a asp-action="Create" class="btn btn-primary">Submit New Publication</a>
+
+<form class="clear-search-form">
+    <a href="#" class="clear-anchor">Clear Search</a>
+    <input type="hidden" name="Search" value="" />
+</form>
+
+<table class="table table-dark">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["TitleSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Title</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["SubjectSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Subject</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["AuthorSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Author</a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Results)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Subject.Title)
+            </td>
+            <td>
+                @foreach (var author in item.Authors)
+                {
+                    @Html.DisplayFor(modelItem => author.LastName)
+                    @if (author != item.Authors.Last())
+                    {
+                        <a>, </a>
+                    }
+
+                }
+            </td>
+            <td>
+                <a class="text-info mr-2" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+            </td>
+            @if (!User.IsInRole("Student"))
+                {
+            <td>
+                <a class="text-danger mr-2" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+                }
+        </tr>
+        }
+    </tbody>
+</table>
+@(await Component.InvokeAsync<PaginationViewComponent>(Model))

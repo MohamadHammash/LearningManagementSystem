@@ -1,0 +1,61 @@
+﻿@model PaginationResult<ListApplicationUsersViewModel>
+
+<form class="search-form">
+    <div class="input-group">
+        <input type="submit" value="Search" />
+        <input type="text" name="Search" class="form-control" placeholder="Search..." autofocus>
+        <button type="reset" class="btn bg-transparent" tabindex="-1" style="margin-left: -40px; z-index: 100;">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
+</form>
+
+<form class="clear-search-form">
+    <a href="#" class="clear-anchor">Clear Search</a>
+    <input type="hidden" name="Search" value="" />
+</form>
+
+<table class="table table-dark table-striped text-info">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["EmailSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]"> Email </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]"> Role</a>
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @foreach (var item in Model.Results)
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Role)
+                </td>
+
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="text-info mr-2">Details</a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="text-info mr-2">Edit</a>
+                    <a asp-action="Remove" asp-route-id="@item.Id" class="text-danger mr-2">Remove</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@(await Component.InvokeAsync<PaginationViewComponent>(Model))

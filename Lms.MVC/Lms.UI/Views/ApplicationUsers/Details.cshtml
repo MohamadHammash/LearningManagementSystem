@@ -1,0 +1,68 @@
+﻿@model DetailsApplicationUserViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4> @Html.DisplayNameFor(model => model.Name)</h4>
+    <hr />
+    <dl class="row">
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Role)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Role)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PhoneNumeber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PhoneNumeber)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Courses)
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.Courses.Count > 0)
+            {
+                @foreach (var course in Model.Courses)
+                {
+                    <a asp-controller="Courses" asp-action="Details" asp-route-id="@course.Id"> @course.Title </a><br />
+                }
+            }
+            else
+            {
+                <p>Not in any course yet</p>
+            }
+        </dd>
+    </dl>
+</div>
+@if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+{
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="text-info">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>
+}

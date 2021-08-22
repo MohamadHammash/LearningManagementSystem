@@ -1,0 +1,82 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> userManager
+@model ListModuleViewModel
+
+@{
+    ViewData["CourseId"] = Model.CourseId;
+    ViewData["Title"] = Model.CourseTitle;
+}
+
+<div class="row">
+    <div class="col">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page"><span>@Model.CourseTitle</span></li>
+        </ol>
+    </div>
+</div>
+<div class="row">
+    <div class="mr-3"><h1>@Model.CourseTitle</h1></div>
+    <br />
+    @if (User.IsInRole("Admin") || User.IsInRole("Teacher"))
+    {
+        <p>
+            <a asp-action="Create" asp-route-id=@Model.CourseId class="btn btn-primary mr-3">Create New Module</a>
+            @if (!User.IsInRole("Admin"))
+            {
+                <a asp-area="Identity" asp-page="/Account/Register" asp-route-CourseId="@Model.CourseId" class="btn btn-info mr-3">Add a student to this course</a> }
+            else
+            {
+                <a asp-area="Identity" asp-page="/Account/Register" asp-route-CourseId="@Model.CourseId" class="btn btn-info mr-3">Add a user to this course</a>
+            }
+
+            <a asp-controller="Courses" asp-action="Edit" asp-route-id="@Model.CourseId" class="btn btn-info">Edit Course</a>
+        </p>
+    }
+</div>
+
+<div class="row">
+    <div class="col">
+        @if (Model.ModuleList.Count() != 0)
+        {
+            <div class="card__wrap--outer">
+                @foreach (var module in Model.ModuleList)
+                {
+                    <div class="card__wrap--inner">
+                        <div class="card">
+                            <a asp-controller="Activities" asp-action="Index" asp-route-id="@module.Id">
+                                <div class="card__item">
+                                    <h4><b>@module.Title</b></h4>
+                                </div>
+                                <div class="card__item flexible">
+                                    <small>@module.Description</small>
+                                </div>
+                                <div class="card__item">
+                                    <small>Starts: @module.StartDate.Date.ToLocalTime()</small><br />
+                                    <small>Ends: @module.EndDate.Date.ToLocalTime()</small>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+        }
+        else
+        {
+            <p>No modules in this course</p>
+        }
+    </div>
+
+    <div class="col-x-5">
+        @if (User.IsInRole("Student"))
+        {            
+                @await Component.InvokeAsync("StudentStatisticsBar", new { CMAType = "course", courseId = (int)Model.CourseId, moduleId = (int)Model.Id, userId = userManager.GetUserId(User) })            
+            <br />
+        }
+        Files:
+        <br />
+        @await Component.InvokeAsync("ListFiles", new { CMAType = "course", id = Model.CourseId.ToString(), userId = userManager.GetUserAsync(User).Result.Id })
+        <br />
+        @await Component.InvokeAsync("UploadFile", new { userId = userManager.GetUserAsync(User).Result.Id, Id = Model.CourseId, CMAType = "course" })
+    </div>
+</div>

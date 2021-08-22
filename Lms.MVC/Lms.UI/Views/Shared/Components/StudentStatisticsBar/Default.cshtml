@@ -1,0 +1,63 @@
+﻿@using Lms.MVC.Core.Repositories
+@inject IUoW uow
+@model StudentStatisticsBar
+
+@if (!(Model.LateAssignments.Count() == 0) && (User.IsInRole("Student")))
+{
+    <div>
+
+        @if (Model.CMAType.ToLower() == "course")
+        {
+            <p class="late">Late assignments in the course : @Model.LateAssignments.Count()</p>
+        }
+
+        @if (Model.CMAType.ToLower() == "module")
+        {
+            <p class="late">Late assignments in this module : @Model.LateAssignments.Count()</p>
+        }
+
+        @if (Model.LateAssignments is not null)
+        {
+            @foreach (var lateAssignment in Model.LateAssignments)
+            {
+                <a asp-controller="Activities" asp-action="Details" asp-route-id="@lateAssignment" class="text-danger"> @uow.ActivityRepository.GetActivityAsync(lateAssignment, false).Result.Title</a><br />
+            }
+        }
+        <br />
+    </div>
+}
+
+<div>
+    <b>Teachers :</b><br />
+    @foreach (var teacher in Model.Teachers)
+    {
+        <a href="mailto:@teacher.Email">@teacher.Name</a>
+        <br />
+    }
+</div>
+<br />
+@if (Model.NextDueAssignment != -1)
+{
+<div>
+    <b>Next due assignment :</b><br />
+    <a asp-controller="Activities" asp-action="Details" asp-route-id="@Model.NextDueAssignment" class="text-danger"> @uow.ActivityRepository.GetActivityAsync(Model.NextDueAssignment, false).Result.Title</a><br />
+</div>
+}
+<br />
+@if (Model.CurrentModule != -1)
+	{
+<div>
+    <b>Current module :</b><br />
+    <a asp-controller="Activities" asp-action="Index" asp-route-id="@Model.CurrentModule">  @uow.ModuleRepository.GetModuleAsync(Model.CurrentModule).Result.Title</a>   
+</div>
+	}
+
+<br />
+<div>
+    @if (Model.NextModule!=-1)
+    {
+    <b>Next module:</b><br />    <a asp-controller="Activities" asp-action="Index" asp-route-id="@Model.NextModule">@uow.ModuleRepository.GetModuleAsync(Model.NextModule).Result.Title</a>
+
+    }
+    
+</div>

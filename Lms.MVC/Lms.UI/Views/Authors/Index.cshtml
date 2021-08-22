@@ -1,0 +1,95 @@
+﻿@model PaginationResult<Lms.MVC.UI.Models.ViewModels.AuthorViewModels.IndexAuthorViewModel>
+
+<form class="search-form">
+    <div class="input-group">
+        <input type="submit" value="Search" />
+        <input type="text" name="Search" class="form-control" placeholder="Search..." autofocus>
+        <button type="reset" class="btn bg-transparent" tabindex="-1" style="margin-left: -40px; z-index: 100;">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
+</form>
+
+<form class="clear-search-form">
+    <a href="#" class="clear-anchor">Clear Search</a>
+    <input type="hidden" name="Search" value="" />
+</form>
+
+
+
+<table class="table table-dark table-striped text-info">
+    <thead>
+        <tr>
+            <th>
+                <form class="form-group">
+
+                    <div class="btn-group">
+                        <a class="btn btn-outline-primary" asp-action="Index" asp-route-sort="@ViewData["FNameSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Sort By First Name </a>
+                        <button type="button" class="btn btn-primary dropdown-toggle-split" asp-action="Index" asp-route-sortBy="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="sr-only">Toggle Dropright</span>
+                            +
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" asp-action="Index" asp-route-sort="@ViewData["FNameAge"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Then By Age</a>
+                            <a class="dropdown-item" asp-action="Index" asp-route-sort="@ViewData["FNameLName"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Then By Last Name</a>
+                        </div>
+                    </div>
+                </form>
+            </th>
+
+            <th>
+                <form class="form-group">
+
+                    <div class="btn-group">
+                        <a class="btn btn-outline-primary" asp-action="Index" asp-route-sort="@ViewData["LNameSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Sort By Last Name</a>
+                        <button type="button" class="btn btn-primary dropdown-toggle-split" asp-action="Index" asp-route-sortBy="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="sr-only">Toggle Dropright</span>
+                            +
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" asp-action="Index" asp-route-sort="@ViewData["LNameAge"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Then By Age</a>
+                            <a class="dropdown-item" asp-action="Index" asp-route-sort="@ViewData["LNameFName"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Then By First Name</a>
+                        </div>
+                    </div>
+                </form>
+            </th>
+            <th>
+                <form class="form-group">
+
+                    <div class="btn-group">
+                        <a class="btn btn-outline-primary" asp-action="Index" asp-route-sort="@ViewData["AgeSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Sort By Age</a>
+                        <button type="button" class="btn btn-primary dropdown-toggle-split" asp-action="Index" asp-route-sortBy="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="sr-only">Toggle Dropright</span>
+                            +
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" asp-action="Index" asp-route-sort="@ViewData["AgeFName"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Then By First Name</a>
+                            <a class="dropdown-item" asp-action="Index" asp-route-sort="@ViewData["AgeLName"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Then By Last Name</a>
+                        </div>
+                    </div>
+                </form>
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @foreach (var item in Model.Results)
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Age)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@(await Component.InvokeAsync<PaginationViewComponent>(Model))

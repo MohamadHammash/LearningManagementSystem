@@ -1,0 +1,209 @@
+﻿@model Lms.MVC.UI.Models.ViewModels.Admin.AdminOverviewViewModel;
+
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <title>Admin Home Page</title>
+        <link href="~/css/AdminLanding.css" rel="stylesheet" id="bootstrap-css">
+    </head>
+
+    <body>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <a asp-action="Index" asp-controller="ApplicationUsers">
+                        <div class="our-team-main">
+
+                            <div class="team-front">
+                                <img src="~/Assets/AdminLandingIcons/Users.png" class="img-fluid" />
+                                <h3>Show all users</h3>
+                            </div>
+
+                            <div class="team-back mt-5">
+                                <span>
+                                    Number of users : @Model.NumberOfUsers
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-lg-6">
+                    <a asp-action="Index" asp-controller="Courses">
+
+                        <div class="our-team-main">
+
+                            <div class="team-front">
+                                <img src="~/Assets/AdminLandingIcons/Courses.png" class="img-fluid" />
+                                <h3>Show all courses</h3>
+                            </div>
+
+                            <div class="team-back mt-5">
+                                <span>
+                                    Number of courses : @Model.NumberOfCourses
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-lg-4">
+                    <a asp-action="Index" asp-route-search="Admin" asp-controller="ApplicationUsers">
+
+                        <div class="our-team-main">
+
+                            <div class="team-front">
+                                <img src="~/Assets/AdminLandingIcons/Admins.png" class="img-fluid" />
+                                <h3>Show all admins</h3>
+                            </div>
+
+                            <div class="team-back mt-5">
+                                <span>
+                                    Number of admins : @Model.NumberOfAdmins
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-lg-4">
+                    <a asp-action="Index" asp-route-search="Teacher" asp-controller="ApplicationUsers">
+
+                        <div class="our-team-main">
+
+                            <div class="team-front">
+                                <img src="~/Assets/AdminLandingIcons/Teachers.png" class="img-fluid" />
+                                <h3>Show all teachers</h3>
+                            </div>
+
+                            <div class="team-back mt-5">
+                                <span>
+                                    Number of teachers : @Model.NumberOfTeachers
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-lg-4">
+                    <a asp-action="Index" asp-route-search="Student" asp-controller="ApplicationUsers">
+
+                        <div class="our-team-main">
+
+                            <div class="team-front">
+                                <img src="~/Assets/AdminLandingIcons/Students.png" class="img-fluid" />
+                                <h3>Show all students</h3>
+                            </div>
+
+                            <div class="team-back mt-5">
+                                <span>
+                                    Number of students : @Model.NumberOfStudents
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-lg-6">
+
+                    <div class="our-team-main">
+
+                        <div class="team-front">
+                            <img src="~/Assets/AdminLandingIcons/Modules.png" class="img-fluid" />
+
+                            <h3 class="non-links">Modules</h3>
+                        </div>
+
+                        <div class="team-back mt-5">
+                            <span>
+                                Number of modules : @Model.NumberOfModules
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+
+                    <div class="our-team-main">
+                        <div class="team-front">
+                            <img src="~/Assets/AdminLandingIcons/Activities.png" class="img-fluid" />
+                            <h3 class="non-links">Activities</h3>
+                        </div>
+
+                        <div class="team-back mt-5">
+                            <span>
+                                Number of activities : @Model.NumberOfActivities
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*<div class="row">
+            <div class="col" style="text-align: center;">
+                <div class="row">
+                    <div class="col">
+                        <p style="margin: 0px;height: 38px;">Number of users: @Model.NumberOfUsers</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p style="height: 38px;margin: 0px;">Number of admins: @Model.NumberOfAdmins</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p style="height: 38px;margin: 0px;">Number of teachers: @Model.NumberOfTeachers</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p style="height: 38px;margin: 0px;">Number of students: @Model.NumberOfStudents</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p style="height: 38px;margin: 1px;">Number of courses: @Model.NumberOfCourses</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p style="height: 38px;margin: 0px;">Number of modules: @Model.NumberOfModules</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p style="height: 38px;margin: 0px;">Number of activities: @Model.NumberOfActivities</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col" style="min-width: 160px;text-align: left;">
+                <div class="row">
+                    <div class="col"><a asp-action="Index" asp-controller="ApplicationUsers" class="btn btn-primary" type="button" style="width: 200px;">Show All Users</a></div>
+                </div>
+                <div class="row">
+                    <div class="col"><a asp-action="Index" asp-route-search="Admin" asp-controller="ApplicationUsers" class="btn btn-primary" type="button" style="width: 200px;">Show All Admins</a></div>
+                </div>
+                <div class="row">
+                    <div class="col"><a asp-action="Index" asp-route-search="Teacher" asp-controller="ApplicationUsers" class="btn btn-primary" type="button" style="width: 200px;">Show All Teachers</a></div>
+                </div>
+                <div class="row">
+                    <div class="col"><a asp-action="Index" asp-route-search="Student" asp-controller="ApplicationUsers" class="btn btn-primary" type="button" style="width: 200px;">Show All Students</a></div>
+                </div>
+                <div class="row">
+                    <div class="col"><a asp-action="Index" asp-controller="Courses" class="btn btn-primary" type="button" style="width: 200px;">Show All Courses</a></div>
+                </div>
+            </div>
+        </div>*@
+
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="assets/js/jquery.min.js"></script>
+        <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    </body>
+</html>

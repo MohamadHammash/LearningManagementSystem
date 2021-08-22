@@ -1,0 +1,161 @@
+@using Microsoft.AspNetCore.Identity
+@using Lms.MVC.UI.Models.ViewModels
+@inject UserManager<ApplicationUser> userManager
+@model ListActivityViewModel
+@*@{
+        Layout = "ModuleActivityLayout";
+    }*@
+<head>
+    @* todo move to js *@
+    <script src="~/js/dhtmlxscheduler.js"></script>
+    <script src="~/js/dhtmlxscheduler_agenda_view.js"></script>
+    <script src="~/js/dhtmlxscheduler_readonly.js"></script>
+    <script src="~/js/dhtmlxscheduler_container_autoresize.js"></script>
+    <link href="https://cdn.dhtmlx.com/scheduler/edge/dhtmlxscheduler_material.css"
+          rel="stylesheet" type="text/css" charset="utf-8">
+</head>
+<div class="row">
+    <div class="col text-center">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Modules" asp-route-Id="@Model.CourseId"><span>@Model.CourseTitle</span></a></li>
+            <li class="breadcrumb-item active" aria-current="page"><span>@Model.ModuleTitle</span></li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+    <div class="mr-3"><h1>@Model.ModuleTitle</h1></div>
+    @if (User.IsInRole("Admin") || User.IsInRole("Teacher"))
+    {        
+            <a asp-action="Create" asp-route-id="@Model.ModuleId" class="btn btn-info mr-3">Create New Activity</a>
+            <a asp-controller="Modules" asp-action="Edit" asp-route-id="@Model.ModuleId" class="btn btn-info">Edit Module</a>     
+    }
+</div>
+<div class="row">
+    <div class="col justify-content-start">
+        <div class="row" style="background:white">
+            <div style="color: green">&#9632; = Lecture&emsp;</div>
+            <div style="color: magenta">&#9632; = ELearning&emsp;</div>
+            <div style="color: blue">&#9632; = Practise&emsp;</div>
+            <div style="color: red">&#9632; = Assignment&emsp;</div>
+            <div style="color: black">&#9632; = Other</div>
+
+            <div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:100vh;'>
+                <div class="dhx_cal_navline">
+                    <div class="dhx_cal_prev_button">&nbsp;</div>
+                    <div class="dhx_cal_next_button">&nbsp;</div>
+                    <div class="dhx_cal_today_button"></div>
+                    <div class="dhx_cal_date"></div>
+                    <div class="dhx_cal_tab" name="day_tab"></div>
+                    <div class="dhx_cal_tab" name="week_tab"></div>
+                    <div class="dhx_cal_tab" name="month_tab"></div>
+                    <div class="dhx_cal_tab" name="agenda_tab" style="right:280px;"></div>
+                </div>
+                <div class="dhx_cal_header"></div>
+                <div class="dhx_cal_data"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-1"></div>
+    <div class="col-x-5">
+        @if (User.IsInRole("Student"))
+        {
+            @await Component.InvokeAsync("StudentStatisticsBar", new { CMAType = "module", courseId = (int)Model.CourseId, moduleId = (int)Model.ModuleId, userId = userManager.GetUserId(User) })
+            <br />
+        }
+        Files:
+        <br />
+        @await Component.InvokeAsync("ListFiles", new { CMAType = "module", id = Model.ModuleId.ToString(), userId = userManager.GetUserAsync(User).Result.Id })
+        <br />
+        @await Component.InvokeAsync("UploadFile", new { userId = userManager.GetUserAsync(User).Result.Id, Id = Model.ModuleId, CMAType = "module" })
+    </div>
+</div>
+
+@section Scripts {
+    @*This is the dhtmlx scheduler*@
+    <script>
+        // define configs
+        const compactHeader = {
+            rows: [
+                {
+                    cols: [
+                        "prev",
+                        "date",
+                        "next",
+                    ]
+                },
+                {
+                    cols: [
+                        "day",
+                        "week",
+                        "month",
+                        "agenda",
+                        "spacer",
+                        "today"
+                    ]
+                }
+            ]
+        };
+
+        const fullHeader = [
+            "day",
+            "week",
+            "month",
+            "agenda",
+            "date",
+            "prev",
+            "today",
+            "next"
+        ];
+
+        scheduler.config.readonly_form = true;
+
+        scheduler.attachEvent("onTemplatesReady", function () {
+            scheduler.templates.event_header = function (start, end, ev)
+            {
+                return (scheduler.templates.event_date(start) + " - " + scheduler.templates.event_date(end) + " " + ev.Title)
+            };
+            scheduler.templates.event_bar_text = function (start, end, event) {
+                return event.Title;
+            };
+            scheduler.templates.agenda_text = function (start, end, ev) {
+                return ev.Title;
+            };
+
+        });
+
+        scheduler.attachEvent("onClick", function (id, e) {
+            var eventObj = scheduler.getEvent(id);
+            window.location.href = "/Activities/Details/" + eventObj.realId;
+        });
+
+    scheduler.config.dblclick_create = false;
+    scheduler.config.drag_create = false;
+
+        resetConfig();
+        scheduler.attachEvent("onBeforeViewChange", resetConfig);
+        scheduler.attachEvent("onSchedulerResize", resetConfig);
+
+        var d = new Date();
+        scheduler.init('scheduler_here', d.now, "month");
+
+        // load data from backend
+        var url = "/Activities/GetEvents/@Html.Raw(Model.ModuleId)";
+        scheduler.load(url, "json");
+
+        function resetConfig() {
+            let header;
+            if (window.innerWidth < 1000) {
+                header = compactHeader;
+            } else {
+                header = fullHeader;
+
+            }
+            scheduler.config.header = header;
+            return true;
+        }
+
+        
+    </script>
+
+}

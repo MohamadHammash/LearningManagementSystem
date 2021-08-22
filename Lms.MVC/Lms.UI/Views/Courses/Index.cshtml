@@ -1,0 +1,87 @@
+﻿@model PaginationResult<ListCourseViewModel>
+@using Microsoft.AspNetCore.Identity
+@using Lms.MVC.UI.Utilities.Pagination
+@using Lms.MVC.UI.Views.Shared.Components.Pagination
+@inject UserManager<ApplicationUser> userManager
+
+@{
+    ViewData["Title"] = "Course List";
+}
+<p>
+    <a asp-action="Create">Create New Course</a>
+
+    @{
+        Context.Request.Cookies.TryGetValue("ShowOnlyMyCourses", out string showOnlyMyCourses);
+
+        if (showOnlyMyCourses == "true")
+        {
+            <a class="btn btn-primary" asp-action="ToggleMyCourses">Show all courses</a>
+        }
+        else
+        {
+            <a class="btn btn-primary" asp-action="ToggleMyCourses">Show only my courses</a>
+        }
+    }
+</p>
+<form class="search-form">
+    <div class="input-group">
+        <input type="submit" value="Search" />
+        <input type="text" name="Search" class="form-control" placeholder="Search..." autofocus>
+        <button type="reset" class="btn bg-transparent" tabindex="-1" style="margin-left: -40px; z-index: 100;">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
+</form>
+
+<form class="clear-search-form">
+    <a href="#" class="clear-anchor">Clear Search</a>
+    <input type="hidden" name="Search" value="" />
+</form>
+
+<table class="table table-dark">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Title</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Start Date</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["EndDateSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">End Date</a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Results)
+        {
+            <tr>
+                <td>
+                    <a asp-controller="Modules" asp-action="Index" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Title)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-controller="Courses" asp-route-id="@item.Id">Details</a>
+                </td>
+
+                <td>
+                    @if (item.Users.Contains(userManager.GetUserAsync(User).Result))
+                    {
+                        <a class="btn btn-primary" asp-action="RegisterForCourseToggle" asp-route-id="@item.Id">Unregister For Course</a> <br />
+                    }
+                    else
+                    {
+                        <a class="btn btn-primary" asp-action="RegisterForCourseToggle" asp-route-id="@item.Id">Register for course</a> <br />
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@(await Component.InvokeAsync<PaginationViewComponent>(Model))
